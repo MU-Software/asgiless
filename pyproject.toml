@@ -1,0 +1,98 @@
+[project]
+name = "asgiless"
+version = "0.1.0"
+authors = [{ name = "MUsoftware", email = "musoftware@mudev.cc" }]
+description = "Add your description here"
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pydantic<3.0.0,>=2.10.6",
+]
+
+[dependency-groups]
+dev = [
+    "coverage[toml]<8.0.0,>=7.6.10",
+    "pre-commit<5.0.0,>=4.1.0",
+    "pytest<9.0.0,>=8.3.4",
+    "pytest-asyncio<1.0.0,>=0.25.2",
+    "pytest-cov<7.0.0,>=6.0.0",
+    "pytest-freezer<1.0.0,>=0.4.9",
+    "pytest-socket<1.0.0,>=0.7.0",
+    "pytest-xdist<4.0.0,>=3.6.1",
+]
+
+[tool.uv]
+default-groups = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.black]
+line-length = 120
+target-version = ["py313"]
+
+[tool.bandit]
+exclude_dirs = ["test", ".venv"]
+
+[tool.mypy]
+python_version = "3.13"
+plugins = ["pydantic.mypy"]
+check_untyped_defs = true
+disallow_any_unimported = true
+disallow_any_decorated = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_return_any = true
+warn_unreachable = true
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+
+[tool.ruff.lint]
+fixable = ["ALL"]
+
+[tool.coverage.run]
+branch = true
+omit = ["test/*"]
+
+[tool.coverage.report]
+ignore_errors = true
+# Regexes for lines to exclude from consideration
+exclude_also = [
+    # Don't complain about missing debug-only code:
+    "def __repr__",
+    "if self\\.debug",
+
+    # Don't complain if tests don't hit defensive assertion code:
+    "raise AssertionError",
+    "raise NotImplementedError",
+
+    # Don't complain if non-runnable code isn't run:
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "if typing.TYPE_CHECKING:",
+
+    # Don't complain about abstract methods, they aren't run:
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["test"]
+python_files = ["test*"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = "--dist loadgroup --disable-socket --allow-unix-socket --allow-hosts=127.0.0.1,127.0.1.1 --cov-config=pyproject.toml --cov-report xml:coverage.xml --cov-report term --cov -vv"
